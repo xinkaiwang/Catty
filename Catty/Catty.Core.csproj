@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrap\Bootstrap.cs" />
+    <Compile Include="Bootstrap\CancelKeyPressListener.cs" />
+    <Compile Include="Bootstrap\ServerBootstrap.cs" />
     <Compile Include="Buffer\AbstractChannelBuffer.cs" />
     <Compile Include="Buffer\ByteArrayChannelBuffer.cs" />
     <Compile Include="Buffer\ByteArrayChannelBufferFactory.cs" />
@@ -102,6 +105,9 @@
     <Compile Include="Channel\UpstreamMessageEvent.cs" />
     <Compile Include="Channel\WriteCompletionEvent.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Handler\Codec\LineBreakDecoder.cs" />
+    <Compile Include="Handler\Codec\OneToOneEncoder.cs" />
+    <Compile Include="Handler\Codec\StringEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sockets\AbstractServerChannel.cs" />
     <Compile Include="Sockets\ChannelRunnableWrapper.cs" />
