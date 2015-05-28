@@ -25,6 +25,7 @@ namespace ExampleServer
             if (msg != null)
             {
                 Console.WriteLine(msg);
+                Channels.Write(ctx.GetChannel(), msg);
                 ctx.GetChannel().Write(msg);
             }
         }
