@@ -9,14 +9,6 @@ namespace Catty.Core.Channel
 {
     public class Channels
     {
-        /**
-         * Creates a new {@link ChannelPipeline}.
-         */
-        public static IChannelPipeline Pipeline()
-        {
-            return new DefaultChannelPipeline();
-        }
-
         public static IChannelPipeline Pipeline(params IChannelHandler[] handlers)
         {
             if (handlers == null)
@@ -24,7 +16,7 @@ namespace Catty.Core.Channel
                 throw new NullReferenceException("handlers");
             }
 
-            IChannelPipeline newPipeline = Pipeline();
+            IChannelPipeline newPipeline = new DefaultChannelPipeline();
             for (int i = 0; i < handlers.Length; i++)
             {
                 IChannelHandler h = handlers[i];
@@ -37,42 +29,6 @@ namespace Catty.Core.Channel
             return newPipeline;
         }
 
-        /**
-         * Creates a new {@link ChannelPipeline} which contains the same entries
-         * with the specified {@code pipeline}.  Please note that only the names
-         * and the references of the {@link ChannelHandler}s will be copied; a new
-         * {@link ChannelHandler} instance will never be created.
-         */
-        public static IChannelPipeline Pipeline(IChannelPipeline pipeline)
-        {
-            IChannelPipeline newPipeline = Pipeline();
-            foreach (var e in pipeline.ToMap())
-            {
-                newPipeline.AddLast(e.Key, e.Value);
-            }
-            return newPipeline;
-        }
-
-        public class ChannelPipelineFactoryByCloneExistPipeline : IChannelPipelineFactory
-        {
-            IChannelPipeline pipeline;
-            public ChannelPipelineFactoryByCloneExistPipeline(IChannelPipeline pipeline)
-            {
-                this.pipeline = pipeline;
-            }
-            public IChannelPipeline GetPipeline()
-            {
-                return Pipeline(pipeline);
-            }
-        }
-
-        /**
-         * Creates a new {@link ChannelPipelineFactory} which creates a new
-         * {@link ChannelPipeline} which contains the same entries with the
-         * specified {@code pipeline}.  Please note that only the names and the
-         * references of the {@link ChannelHandler}s will be copied; a new
-         * {@link ChannelHandler} instance will never be created.
-         */
         public static IChannelPipelineFactory PipelineFactory(IChannelPipeline pipeline)
         {
             return new ChannelPipelineFactoryByCloneExistPipeline(pipeline);
@@ -445,6 +401,31 @@ namespace Catty.Core.Channel
         {
             ctx.SendDownstream(new DownstreamChannelStateEvent(
                     ctx.GetChannel(), future, ChannelState.OPEN, false));
+        }
+    }
+
+    /**
+     * Creates a new {@link ChannelPipelineFactory} which creates a new
+     * {@link ChannelPipeline} which contains the same entries with the
+     * specified {@code pipeline}.  Please note that only the names and the
+     * references of the {@link ChannelHandler}s will be copied; a new
+     * {@link ChannelHandler} instance will never be created.
+     */
+    public class ChannelPipelineFactoryByCloneExistPipeline : IChannelPipelineFactory
+    {
+        IChannelPipeline pipeline;
+        public ChannelPipelineFactoryByCloneExistPipeline(IChannelPipeline pipeline)
+        {
+            this.pipeline = pipeline;
+        }
+        public IChannelPipeline GetPipeline()
+        {
+            IChannelPipeline newPipeline = new DefaultChannelPipeline();
+            foreach (var e in pipeline.ToMap())
+            {
+                newPipeline.AddLast(e.Key, e.Value);
+            }
+            return newPipeline;
         }
     }
 }

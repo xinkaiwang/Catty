@@ -10,7 +10,6 @@ namespace Catty.Core.Bootstrap
     public class Bootstrap
     {
         private volatile IChannelFactory factory;
-        private volatile IChannelPipeline pipeline = Channels.Pipeline();
         private volatile IChannelPipelineFactory pipelineFactory;
         private volatile Dictionary<String, Object> options = new Dictionary<String, Object>();
 
@@ -21,7 +20,6 @@ namespace Catty.Core.Bootstrap
          */
         protected Bootstrap()
         {
-            pipelineFactory = Channels.PipelineFactory(pipeline);
         }
 
         /**
@@ -29,7 +27,6 @@ namespace Catty.Core.Bootstrap
          */
         protected Bootstrap(IChannelFactory channelFactory)
         {
-            pipelineFactory = Channels.PipelineFactory(pipeline);
             SetFactory(channelFactory);
         }
 
@@ -85,6 +82,29 @@ namespace Catty.Core.Bootstrap
             return pipelineFactory;
         }
 
+        private class MyChannelPipelineFactory : IChannelPipelineFactory
+        {
+            Func<IChannelHandler[]> handlersFactory;
+            public MyChannelPipelineFactory(Func<IChannelHandler[]> handlersFactory)
+            {
+                this.handlersFactory = handlersFactory;
+            }
+            public IChannelPipeline GetPipeline()
+            {
+                return Channels.Pipeline(handlersFactory());
+            }
+        }
+
+        public void SetPipelineFactory(Func<IChannelHandler[]> handlers)
+        {
+            if (handlers == null)
+            {
+                throw new NullReferenceException("handlers");
+            }
+            var factory = new MyChannelPipelineFactory(handlers);
+            this.pipelineFactory = factory;
+        }
+
         /**
          * Sets the {@link ChannelPipelineFactory} which creates a new
          * {@link ChannelPipeline} for each new {@link Channel}.  Calling this
@@ -101,7 +121,6 @@ namespace Catty.Core.Bootstrap
             {
                 throw new NullReferenceException("pipelineFactory");
             }
-            pipeline = null;
             this.pipelineFactory = pipelineFactory;
         }
 

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Catty.Bootstrap
 {
-    public class CancelKeyPressListener
+    public class CtrlCListener
     {
         private ManualResetEvent lockObj = new ManualResetEvent(false);
 
-        public CancelKeyPressListener()
+        public CtrlCListener()
         {
             Console.CancelKeyPress += delegate(object sender, ConsoleCancelEventArgs e)
             {

@@ -1,26 +1,48 @@
 ﻿using Catty;
 using Catty.Bootstrap;
+using Catty.Core.Buffer;
+using Catty.Core.Channel;
+using Catty.Core.Handler.Codec;
+using ExampleServer.Handler;
 using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ExampleServer
 {
 
+    public class MyHandler : SimpleChannelUpstreamHandler
+    {
+        public override void MessageReceived(
+                IChannelHandlerContext ctx, IMessageEvent e)
+        {
+            string msg = e.GetMessage() as string;
+            if (msg != null)
+            {
+                Console.WriteLine(msg);
+                ctx.GetChannel().Write(msg);
+            }
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
             BasicConfigurator.Configure();
-            Console.WriteLine(Catty.Class1.Hello);
-            new Class1().TestMethod();
-            new LineAndJsonEchoServer("self:8002").Run();
+
+            Func<IChannelHandler[]> handlersFactory = () => new IChannelHandler[] {new LineBreakDecoder(), new StringEncoder(), new MyHandler()};
+            var server = new SimpleTcpService().SetHandlers(handlersFactory);
+            server.Bind(new IPEndPoint(IPAddress.Any, 8002));
             Console.WriteLine("server started ...");
-            new CancelKeyPressListener().WaitForEvent();
+            new CtrlCListener().WaitForEvent();
             Console.WriteLine("server exiting ....");
         }
+
     }
 }

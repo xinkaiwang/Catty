@@ -299,7 +299,7 @@ namespace Catty.Core.Channel
          * Converts this pipeline into an ordered {@link Map} whose keys are
          * handler names and whose values are handlers.
          */
-        Dictionary<String, IChannelHandler> ToMap();
+        IList<KeyValuePair<String, IChannelHandler>> ToMap();
 
     }
 }

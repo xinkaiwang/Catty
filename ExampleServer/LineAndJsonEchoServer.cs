@@ -15,28 +15,61 @@ namespace ExampleServer
 {
     public class LineAndJsonEchoServer
     {
-        private readonly string hostPort;
+        private ServerBootstrap bootstrap;
 
-        public LineAndJsonEchoServer(string hostPort)
-        {
-            this.hostPort = hostPort;
-        }
-
-        public void Run()
+        public LineAndJsonEchoServer()
         {
             // Configure the server.
 
             var factory = new NioServerSocketChannelFactory();
-            ServerBootstrap bootstrap = new ServerBootstrap(factory);
+            bootstrap = new ServerBootstrap(factory);
 
             // Set up the pipeline factory.
             IChannelPipeline template = Channels.Pipeline(new LineBreakDecoder(), new StringEncoder(), new JsonEncoder(), new JsonEchoServerHandler());
-            bootstrap.SetPipelineFactory(new Channels.ChannelPipelineFactoryByCloneExistPipeline(template));
-
-            // Bind and start to accept incoming connections.
-            IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(this.hostPort);
-            bootstrap.Bind(addr.Serialize());
+            bootstrap.SetPipelineFactory(new ChannelPipelineFactoryByCloneExistPipeline(template));
         }
 
+        public IChannel Bind(string hostPort)
+        {
+            // Bind and start to accept incoming connections.
+            IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(hostPort);
+            return bootstrap.Bind(addr.Serialize());
+        }
+    }
+
+    public class LineAndJsonEchoServerWithNamedHandler
+    {
+        private ServerBootstrap bootstrap;
+        public LineAndJsonEchoServerWithNamedHandler()
+        {
+            // Configure the server.
+
+            var factory = new NioServerSocketChannelFactory();
+            bootstrap = new ServerBootstrap(factory);
+
+            // Set up the pipeline factory.
+            IChannelPipelineFactory pipelineFactory = new MyFactory();
+            bootstrap.SetPipelineFactory(pipelineFactory);
+        }
+
+        public class MyFactory : IChannelPipelineFactory
+        {
+            public IChannelPipeline GetPipeline()
+            {
+                DefaultChannelPipeline template = new DefaultChannelPipeline();
+                template.AddLast("4", new StringEncoder());
+                template.AddLast("2", new JsonEncoder());
+                template.AddLast("1", new JsonEchoServerHandler());
+                template.AddFirst("3", new LineBreakDecoder());
+                return template;
+            }
+        }
+
+        public IChannel Bind(string hostPort)
+        {
+            // Bind and start to accept incoming connections.
+            IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(hostPort);
+            return bootstrap.Bind(addr.Serialize());
+        }
     }
 }

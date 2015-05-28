@@ -657,12 +657,20 @@ namespace Catty.Core.Channel
 
         public List<string> GetNames()
         {
-            return name2ctx.Keys.ToList();
+            List<string> list = new List<string>();
+            var item = this.head;
+            while (item != null)
+            {
+                list.Add(item.GetName());
+                item = item.next;
+            }
+            return list;
         }
 
-        public Dictionary<string, IChannelHandler> ToMap()
+        public IList<KeyValuePair<String, IChannelHandler>> ToMap()
         {
-            return name2ctx.ToDictionary(o => o.Key, o => o.Value.GetHandler());
+            var names = GetNames();
+            return names.Select(o => new KeyValuePair<String, IChannelHandler>(o, this.name2ctx[o].GetHandler())).ToList();
         }
 
         internal sealed class DefaultChannelHandlerContext : IChannelHandlerContext
