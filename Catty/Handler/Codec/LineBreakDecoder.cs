@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Catty.Core.Handler.Codec
 {
     // 
-    public class LineBreakDecoder : SimpleChannelUpstreamHandler
+    public class LineBreakDecoder : SimpleChannelUpstreamHandler, IChannelDownstreamHandler
     {
         protected string cumulation;
 
@@ -49,6 +49,31 @@ namespace Catty.Core.Handler.Codec
                 index = str.IndexOf('\n');
             } while (index > 0);
             cumulation = str;
+        }
+
+        public void HandleDownstream(IChannelHandlerContext ctx, IChannelEvent evt)
+        {
+            if (!(evt is IMessageEvent))
+            {
+                ctx.SendDownstream(evt);
+                return;
+            }
+
+            IMessageEvent e = (IMessageEvent)evt;
+            Object originalMessage = e.GetMessage();
+            if (originalMessage != null)
+            {
+                if (originalMessage is String)
+                {
+                    IChannelBuffer buf = ChannelBuffers.DynamicBuffer(100);
+                    byte[] bytes = DataTypeString.BytesFromString((string)originalMessage);
+                    buf.WriteBytes(bytes, 0, bytes.Length);
+                    buf.WriteByte((byte)'\n');
+                    ctx.GetChannel().Write(buf);
+                    return;
+                }
+            }
+            ctx.SendDownstream(evt);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ExampleServer
         {
             BasicConfigurator.Configure();
 
-            Func<IChannelHandler[]> handlersFactory = () => new IChannelHandler[] {new LineBreakDecoder(), new StringEncoder(), new MyHandler()};
+            Func<IChannelHandler[]> handlersFactory = () => new IChannelHandler[] {new LineBreakDecoder(), new MyHandler()};
             var server = new SimpleTcpService().SetHandlers(handlersFactory);
             server.Bind(new IPEndPoint(IPAddress.Any, 8002));
             Console.WriteLine("server started ...");

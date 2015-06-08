@@ -32,12 +32,9 @@ namespace Catty.Bootstrap
             return this;
         }
 
-        public SimpleTcpService Bind(string hostPort)
+        public SimpleTcpService Bind(int port)
         {
-            // Bind and start to accept incoming connections.
-            IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(hostPort);
-            var result = bootstrap.Bind(addr.Serialize());
-            return this;
+            return Bind(new IPEndPoint(IPAddress.Any, port));
         }
     }
 }
