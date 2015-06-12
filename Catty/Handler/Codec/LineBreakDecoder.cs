@@ -42,7 +42,7 @@ namespace Catty.Core.Handler.Codec
             {
                 if (index > 0)
                 {
-                    string item = str.Substring(0, index - 1);
+                    string item = str.Substring(0, index);
                     str = str.Substring(index + 1);
                     Channels.FireMessageReceived(ctx, item);
                 }

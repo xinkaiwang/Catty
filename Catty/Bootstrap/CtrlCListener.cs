@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Catty.Bootstrap
+namespace Catty.Core.Bootstrap
 {
     public class CtrlCListener
     {

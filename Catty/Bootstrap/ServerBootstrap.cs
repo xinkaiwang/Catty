@@ -64,7 +64,7 @@ namespace Catty.Core.Bootstrap
          *         if failed to create a new channel and
          *                      bind it to the local address
          */
-        public IChannel Bind(SocketAddress localAddress)
+        public IChannel Bind(EndPoint localAddress)
         {
             IChannelFuture future = BindAsync(localAddress);
 
@@ -86,7 +86,7 @@ namespace Catty.Core.Bootstrap
          * bound and accepts incoming connections
          *
          */
-        public IChannelFuture BindAsync(SocketAddress localAddress)
+        public IChannelFuture BindAsync(EndPoint localAddress)
         {
             if (localAddress == null)
             {
@@ -123,10 +123,10 @@ namespace Catty.Core.Bootstrap
         internal class Binder : SimpleChannelUpstreamHandler
         {
             private readonly ServerBootstrap parent;
-            private readonly SocketAddress localAddress;
+            private readonly EndPoint localAddress;
             private readonly Dictionary<String, Object> childOptions = new Dictionary<String, Object>();
             internal readonly DefaultChannelFuture bindFuture = new DefaultChannelFuture(null, false);
-            internal Binder(ServerBootstrap parent, SocketAddress localAddress)
+            internal Binder(ServerBootstrap parent, EndPoint localAddress)
             {
                 this.parent = parent;
                 this.localAddress = localAddress;
@@ -197,6 +197,11 @@ namespace Catty.Core.Bootstrap
                     IChannelHandlerContext ctx, IExceptionEvent e)
             {
                 bindFuture.SetFailure(e.GetCause());
+                ctx.SendUpstream(e);
+            }
+
+            public override void MessageReceived(IChannelHandlerContext ctx, IMessageEvent e)
+            {
                 ctx.SendUpstream(e);
             }
         }

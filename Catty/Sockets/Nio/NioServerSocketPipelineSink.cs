@@ -52,9 +52,7 @@ namespace Catty.Core.Sockets.Nio
                     //    ((NioServerBoss) channel.boss).close(channel, future);
                     //}
                     {
-                        SocketAddress localAddr = eve.GetValue() as SocketAddress;
-                        IPEndPoint dummyEndPoint = new IPEndPoint(IPAddress.None, 1000);
-                        IPEndPoint localEndPoint = (IPEndPoint)dummyEndPoint.Create(localAddr);
+                        EndPoint localEndPoint = eve.GetValue() as EndPoint;
                         try
                         {
                             channel.BindAndStartAccept(localEndPoint);

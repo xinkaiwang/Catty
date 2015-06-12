@@ -50,12 +50,12 @@ namespace Catty.Core.Sockets.Nio
             return GetServerSocketChannelConfig();
         }
 
-        public override SocketAddress GetLocalAddress()
+        public override EndPoint GetLocalAddress()
         {
-            return (SocketAddress)socket.LocalEndPoint.Serialize();
+            return socket.LocalEndPoint;
         }
 
-        public override SocketAddress GetRemoteAddress()
+        public override EndPoint GetRemoteAddress()
         {
             return null;
         }
@@ -80,7 +80,7 @@ namespace Catty.Core.Sockets.Nio
             return base.SetClosed();
         }
 
-        internal void BindAndStartAccept(IPEndPoint localEndPoint) // only to be called by Sink
+        internal void BindAndStartAccept(EndPoint localEndPoint) // only to be called by Sink
         {
             this.socket.Bind(localEndPoint);
             this.socket.Listen(MAX_CONNECTIONS); // max length of the pending connection queue

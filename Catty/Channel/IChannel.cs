@@ -91,7 +91,7 @@ namespace Catty.Core.Channel
          * @return the local address of this channel.
          *         {@code null} if this channel is not bound.
          */
-        SocketAddress GetLocalAddress();
+        EndPoint GetLocalAddress();
 
         /**
          * Returns the remote address where this channel is connected to.  The
@@ -107,7 +107,7 @@ namespace Catty.Core.Channel
          *         the origination of the received message as this method will
          *         return {@code null}.
          */
-        SocketAddress GetRemoteAddress();
+        EndPoint GetRemoteAddress();
 
         /**
          * Sends a message to this channel asynchronously.    If this channel was
@@ -145,7 +145,7 @@ namespace Catty.Core.Channel
          *
          * @throws NullPointerException if the specified message is {@code null}
          */
-        IChannelFuture Write(Object message, SocketAddress remoteAddress);
+        IChannelFuture Write(Object message, EndPoint remoteAddress);
 
         /**
          * Binds this channel to the specified local address asynchronously.
@@ -157,7 +157,7 @@ namespace Catty.Core.Channel
          *
          * @throws NullPointerException if the specified address is {@code null}
          */
-        IChannelFuture Bind(SocketAddress localAddress);
+        IChannelFuture Bind(EndPoint localAddress);
 
         /**
          * Connects this channel to the specified remote address asynchronously.
@@ -169,7 +169,7 @@ namespace Catty.Core.Channel
          *
          * @throws NullPointerException if the specified address is {@code null}
          */
-        IChannelFuture Connect(SocketAddress remoteAddress);
+        IChannelFuture Connect(EndPoint remoteAddress);
 
         /**
          * Disconnects this channel from the current remote address asynchronously.

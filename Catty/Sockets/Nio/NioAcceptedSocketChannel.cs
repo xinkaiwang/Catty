@@ -17,9 +17,9 @@ namespace Catty.Core.Sockets.Nio
             : base(parent, factory, pipeline, sink, socket)
         {
 
+            this.StartIncommingThread();
+            Channels.FireChannelConnected(this);
             SetConnected();
-
-            Channels.FireChannelOpen(this);
         }
     }
 }

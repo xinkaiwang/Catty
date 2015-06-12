@@ -15,7 +15,7 @@ namespace Catty.Core.Sockets
         {
         }
 
-        public override IChannelFuture Connect(SocketAddress remoteAddress)
+        public override IChannelFuture Connect(EndPoint remoteAddress)
         {
             return GetUnsupportedOperationFuture();
         }
@@ -45,7 +45,7 @@ namespace Catty.Core.Sockets
             return GetUnsupportedOperationFuture();
         }
 
-        public override IChannelFuture Write(Object message, SocketAddress remoteAddress)
+        public override IChannelFuture Write(Object message, EndPoint remoteAddress)
         {
             return GetUnsupportedOperationFuture();
         }

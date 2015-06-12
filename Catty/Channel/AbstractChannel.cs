@@ -194,7 +194,7 @@ namespace Catty.Core.Channel
             return closeFuture.SetClosed();
         }
 
-        public IChannelFuture Bind(SocketAddress localAddress)
+        public IChannelFuture Bind(EndPoint localAddress)
         {
             return Channels.Bind(this, localAddress);
         }
@@ -220,15 +220,15 @@ namespace Catty.Core.Channel
 
         public abstract bool IsConnected();
 
-        public abstract System.Net.SocketAddress GetLocalAddress();
+        public abstract EndPoint GetLocalAddress();
 
-        public abstract System.Net.SocketAddress GetRemoteAddress();
+        public abstract EndPoint GetRemoteAddress();
 
         public abstract IChannelFuture Write(object message);
 
-        public abstract IChannelFuture Write(object message, System.Net.SocketAddress remoteAddress);
+        public abstract IChannelFuture Write(object message, EndPoint remoteAddress);
 
-        public abstract IChannelFuture Connect(System.Net.SocketAddress remoteAddress);
+        public abstract IChannelFuture Connect(EndPoint remoteAddress);
 
         public abstract IChannelFuture Disconnect();
 

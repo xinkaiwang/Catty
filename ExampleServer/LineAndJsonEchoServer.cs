@@ -33,7 +33,7 @@ namespace ExampleServer
         {
             // Bind and start to accept incoming connections.
             IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(hostPort);
-            return bootstrap.Bind(addr.Serialize());
+            return bootstrap.Bind(addr);
         }
     }
 
@@ -69,7 +69,7 @@ namespace ExampleServer
         {
             // Bind and start to accept incoming connections.
             IPEndPoint addr = AddressRecordUtil.GetIPEndPointFromString(hostPort);
-            return bootstrap.Bind(addr.Serialize());
+            return bootstrap.Bind(addr);
         }
     }
 }

@@ -12,13 +12,13 @@ namespace Catty.Core.Channel
 
         private readonly IChannel channel;
         private readonly Object message;
-        private readonly SocketAddress remoteAddress;
+        private readonly EndPoint remoteAddress;
 
         /**
          * Creates a new instance.
          */
         public UpstreamMessageEvent(
-                IChannel channel, Object message, SocketAddress remoteAddress)
+                IChannel channel, Object message, EndPoint remoteAddress)
         {
 
             if (channel == null)
@@ -56,7 +56,7 @@ namespace Catty.Core.Channel
             return message;
         }
 
-        public SocketAddress GetRemoteAddress()
+        public EndPoint GetRemoteAddress()
         {
             return remoteAddress;
         }

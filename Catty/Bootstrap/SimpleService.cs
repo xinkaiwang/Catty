@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catty.Bootstrap
+namespace Catty.Core.Bootstrap
 {
     public class SimpleTcpService
     {
@@ -28,7 +28,7 @@ namespace Catty.Bootstrap
 
         public SimpleTcpService Bind(IPEndPoint addr)
         {
-            var result = bootstrap.Bind(addr.Serialize());
+            var result = bootstrap.Bind(addr);
             return this;
         }
 

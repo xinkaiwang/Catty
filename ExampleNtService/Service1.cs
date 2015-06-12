@@ -1,4 +1,4 @@
-﻿using Catty.Bootstrap;
+﻿using Catty.Core.Bootstrap;
 using Catty.Core.Channel;
 using Catty.Core.Handler.Codec;
 using System;

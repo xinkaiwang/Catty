@@ -11,6 +11,6 @@ namespace Catty.Core.Channel
     {
         Object GetMessage();
 
-        SocketAddress GetRemoteAddress();
+        EndPoint GetRemoteAddress();
     }
 }

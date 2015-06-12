@@ -34,7 +34,7 @@ namespace ExampleNtService
 
         protected override void OnStart(string[] args)
         {
-            bootstrap.Bind(addr.Serialize());
+            bootstrap.Bind(addr);
         }
 
         protected override void OnStop()

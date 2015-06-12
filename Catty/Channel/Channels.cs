@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Catty.Core.Sockets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -94,7 +95,7 @@ namespace Catty.Core.Channel
          * @param remoteAddress  the remote address where the received message
          *                       came from
          */
-        public static void FireMessageReceived(IChannel channel, Object message, SocketAddress remoteAddress)
+        public static void FireMessageReceived(IChannel channel, Object message, EndPoint remoteAddress)
         {
             channel.GetPipeline().SendUpstream(
                     new UpstreamMessageEvent(channel, message, remoteAddress));
@@ -124,7 +125,7 @@ namespace Catty.Core.Channel
          *                       came from
          */
         public static void FireMessageReceived(
-                IChannelHandlerContext ctx, Object message, SocketAddress remoteAddress)
+                IChannelHandlerContext ctx, Object message, EndPoint remoteAddress)
         {
             ctx.SendUpstream(new UpstreamMessageEvent(
                     ctx.GetChannel(), message, remoteAddress));
@@ -199,7 +200,7 @@ namespace Catty.Core.Channel
          * @param localAddress
          *        the local address where the specified channel is bound
          */
-        public static void FireChannelBound(IChannel channel, SocketAddress localAddress)
+        public static void FireChannelBound(IChannel channel, EndPoint localAddress)
         {
             channel.GetPipeline().SendUpstream(
                     new UpstreamChannelStateEvent(
@@ -215,7 +216,7 @@ namespace Catty.Core.Channel
          * @param localAddress
          *        the local address where the specified channel is bound
          */
-        public static void FireChannelBound(IChannelHandlerContext ctx, SocketAddress localAddress)
+        public static void FireChannelBound(IChannelHandlerContext ctx, EndPoint localAddress)
         {
             ctx.SendUpstream(new UpstreamChannelStateEvent(
                     ctx.GetChannel(), ChannelState.BOUND, localAddress));
@@ -232,7 +233,7 @@ namespace Catty.Core.Channel
          * @return the {@link ChannelFuture} which will be notified when the
          *         bind operation is done
          */
-        public static IChannelFuture Bind(IChannel channel, SocketAddress localAddress)
+        public static IChannelFuture Bind(IChannel channel, EndPoint localAddress)
         {
             if (localAddress == null)
             {
@@ -299,6 +300,19 @@ namespace Catty.Core.Channel
             return future;
         }
 
+        internal static void FireChannelConnected(ISocketChannel channel)
+        {
+            // Notify the parent handler.
+            if (channel.GetParent() != null)
+            {
+                FireChildChannelStateChanged(channel.GetParent(), channel);
+            }
+
+            channel.GetPipeline().SendUpstream(
+                    new UpstreamChannelStateEvent(
+                            channel, ChannelState.CONNECTED, channel.GetRemoteSocketAddress()));
+        }
+
         /**
          * Sends a {@code "write"} request to the last
          * {@link ChannelDownstreamHandler} in the {@link ChannelPipeline} of
@@ -344,7 +358,7 @@ namespace Catty.Core.Channel
          * @return the {@link ChannelFuture} which will be notified when the
          *         write operation is done
          */
-        public static IChannelFuture Write(IChannel channel, Object message, SocketAddress remoteAddress)
+        public static IChannelFuture Write(IChannel channel, Object message, EndPoint remoteAddress)
         {
             IChannelFuture future = Future(channel);
             channel.GetPipeline().SendDownstream(
@@ -365,7 +379,7 @@ namespace Catty.Core.Channel
          * @param remoteAddress  the destination of the message.
          *                       {@code null} to use the default remote address.
          */
-        public static void Write(IChannelHandlerContext ctx, IChannelFuture future, Object message, SocketAddress remoteAddress)
+        public static void Write(IChannelHandlerContext ctx, IChannelFuture future, Object message, EndPoint remoteAddress)
         {
             ctx.SendDownstream(
                     new DownstreamMessageEvent(ctx.GetChannel(), future, message, remoteAddress));

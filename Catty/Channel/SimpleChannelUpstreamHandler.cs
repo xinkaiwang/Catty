@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Catty.Core.Channel
 {
-    public class SimpleChannelUpstreamHandler : IChannelUpstreamHandler
+    public abstract class SimpleChannelUpstreamHandler : IChannelUpstreamHandler
     {
         /**
          * {@inheritDoc}  Down-casts the received upstream event into more
@@ -95,11 +95,7 @@ namespace Catty.Core.Channel
          * Invoked when a message object (e.g: {@link ChannelBuffer}) was received
          * from a remote peer.
          */
-        public virtual void MessageReceived(
-                IChannelHandlerContext ctx, IMessageEvent e)
-        {
-            ctx.SendUpstream(e);
-        }
+        public abstract void MessageReceived(IChannelHandlerContext ctx, IMessageEvent e);
 
         /**
          * Invoked when an exception was raised by an I/O thread or a

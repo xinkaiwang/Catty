@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap\Bootstrap.cs" />
+    <Compile Include="Bootstrap\ClientBootstrap.cs" />
     <Compile Include="Bootstrap\CtrlCListener.cs" />
     <Compile Include="Bootstrap\ServerBootstrap.cs" />
     <Compile Include="Bootstrap\SimpleService.cs" />
@@ -115,11 +116,14 @@
     <Compile Include="Sockets\ISocketChannel.cs" />
     <Compile Include="Sockets\ISocketChannelConfig.cs" />
     <Compile Include="Sockets\Nio\AbstractNioChannelSink.cs" />
+    <Compile Include="Sockets\IClientSocketChannelFactory.cs" />
     <Compile Include="Sockets\Nio\DefaultNioSocketChannelConfig.cs" />
     <Compile Include="Sockets\Nio\INioChannelConfig.cs" />
     <Compile Include="Sockets\Nio\INioSocketChannelConfig.cs" />
     <Compile Include="Sockets\Nio\NioAcceptedSocketChannel.cs" />
     <Compile Include="Sockets\Nio\NioClientSocketChannel.cs" />
+    <Compile Include="Sockets\Nio\NioClientSocketChannelFactory.cs" />
+    <Compile Include="Sockets\Nio\NioClientSocketPipelineSink.cs" />
     <Compile Include="Sockets\Nio\NioServerSocketChannel.cs" />
     <Compile Include="Sockets\Nio\NioServerSocketChannelFactory.cs" />
     <Compile Include="Sockets\Nio\NioServerSocketPipelineSink.cs" />

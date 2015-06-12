@@ -35,7 +35,6 @@ namespace Catty.Core.Sockets.Nio
             this.socket = socket;
             SetTcpKeepAlive(socket, 10 * 1000, 5 * 1000);
             config = new DefaultNioSocketChannelConfig(socket);
-            this.StartIncommingThread();
         }
 
         internal void ExecuteInIoThread(ChannelRunnableWrapper wrapper)
@@ -53,14 +52,19 @@ namespace Catty.Core.Sockets.Nio
             return state >= ST_CONNECTED;
         }
 
-        public override SocketAddress GetLocalAddress()
-        {
-            return this.socket.LocalEndPoint.Serialize();
+        internal void SetBound() {
+            //assert state == ST_OPEN : "Invalid state: " + state;
+            state = ST_BOUND;
         }
 
-        public override SocketAddress GetRemoteAddress()
+        public override EndPoint GetLocalAddress()
         {
-            return this.socket.RemoteEndPoint.Serialize();
+            return this.socket.LocalEndPoint;
+        }
+
+        public override EndPoint GetRemoteAddress()
+        {
+            return this.socket.RemoteEndPoint;
         }
 
         public EndPoint GetLocalSocketAddress()
@@ -78,7 +82,7 @@ namespace Catty.Core.Sockets.Nio
             return Channels.Write(this, message);
         }
 
-        public override IChannelFuture Write(object message, System.Net.SocketAddress remoteAddress)
+        public override IChannelFuture Write(object message, EndPoint remoteAddress)
         {
             if (remoteAddress == null || remoteAddress.Equals(GetRemoteAddress()))
             {
@@ -90,14 +94,28 @@ namespace Catty.Core.Sockets.Nio
             }
         }
 
-        public override IChannelFuture Connect(System.Net.SocketAddress remoteAddress)
+        public override IChannelFuture Connect(EndPoint remoteAddress)
         {
             throw new NotImplementedException();
         }
 
         public override IChannelFuture Disconnect()
         {
-            throw new NotImplementedException();
+            if (socket.Connected)
+            {
+                try
+                {
+                    if (log != null && log.IsInfoEnabled)
+                        log.Info("event=ClosingSocket localEndPoint=" + GetLocalSocketAddress() + " remoteEndPoint=" + GetRemoteSocketAddress());
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Close();
+                }
+                catch (Exception e)
+                {
+                }
+            }
+            state = ST_CLOSED;
+            return new SucceededChannelFuture(this);
         }
 
         public override int GetInterestOps()
@@ -257,6 +275,7 @@ namespace Catty.Core.Sockets.Nio
         private object receiveLock = new object();
         private byte[] incommingBuf;
 
+        // this need to be called after socket connected (or accepted)
         public void StartIncommingThread()
         {
             try
