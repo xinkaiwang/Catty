@@ -42,6 +42,10 @@ namespace Catty.Core.Handler.Codec
             {
                 if (index > 0)
                 {
+                    if (str.ToCharArray()[index - 1] == '\r')
+                    {
+                        index = index - 1;
+                    }
                     string item = str.Substring(0, index);
                     str = str.Substring(index + 1);
                     Channels.FireMessageReceived(ctx, item);
