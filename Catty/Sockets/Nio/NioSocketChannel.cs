@@ -77,47 +77,6 @@ namespace Catty.Core.Sockets.Nio
             return this.socket.RemoteEndPoint;
         }
 
-        public override IChannelFuture Write(object message)
-        {
-            return Channels.Write(this, message);
-        }
-
-        public override IChannelFuture Write(object message, EndPoint remoteAddress)
-        {
-            if (remoteAddress == null || remoteAddress.Equals(GetRemoteAddress()))
-            {
-                return Channels.Write(this, message, remoteAddress);
-            }
-            else
-            {
-                return GetUnsupportedOperationFuture();
-            }
-        }
-
-        public override IChannelFuture Connect(EndPoint remoteAddress)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IChannelFuture Disconnect()
-        {
-            if (socket.Connected)
-            {
-                try
-                {
-                    if (log != null && log.IsInfoEnabled)
-                        log.Info("event=ClosingSocket localEndPoint=" + GetLocalSocketAddress() + " remoteEndPoint=" + GetRemoteSocketAddress());
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
-                }
-                catch (Exception e)
-                {
-                }
-            }
-            state = ST_CLOSED;
-            return new SucceededChannelFuture(this);
-        }
-
         public override int GetInterestOps()
         {
             throw new NotImplementedException();
@@ -375,6 +334,8 @@ namespace Catty.Core.Sockets.Nio
             if (state > ST_CLOSED)
             {
                 state = ST_CLOSED;
+                if (log != null && log.IsInfoEnabled)
+                    log.Info("event=ClosingSocket localEndPoint=" + GetLocalSocketAddress() + " remoteEndPoint=" + GetRemoteSocketAddress());
                 socket.Close(); // hopefully close() should will never fail :)
             }
             future.SetSuccess();

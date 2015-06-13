@@ -25,7 +25,7 @@ namespace ExampleServer.Handler
             if (str != null)
             {
                 Interlocked.Add(ref transferredBytes, str.Length);
-                e.GetChannel().Write(new { id = 10, line = str });
+                Channels.Write(e.GetChannel(), new { id = 10, line = str });
             }
         }
 

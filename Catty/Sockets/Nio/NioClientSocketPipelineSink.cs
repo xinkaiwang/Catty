@@ -52,7 +52,7 @@ namespace Catty.Sockets.Nio
                     case ChannelState.CONNECTED:
                         if (value != null)
                         {
-                            connect(channel, future, (IPEndPoint)value);
+                            Connect(channel, future, (IPEndPoint)value);
                         }
                         else
                         {
@@ -89,7 +89,7 @@ namespace Catty.Sockets.Nio
             }
         }
 
-        private void connect(NioClientSocketChannel channel, IChannelFuture cf, IPEndPoint remoteAddress)
+        private void Connect(NioClientSocketChannel channel, IChannelFuture cf, IPEndPoint remoteAddress)
         {
             try
             {

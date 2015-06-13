@@ -34,8 +34,7 @@ namespace ExampleNtService
             {
                 msg = msg.ToUpper();
                 Console.WriteLine(msg);
-                //Channels.Write(ctx.GetChannel(), msg);
-                ctx.GetChannel().Write(msg);
+                Channels.Write(ctx.GetChannel(), msg);
             }
         }
     }

@@ -267,6 +267,50 @@ namespace Catty.Core.Channel
         }
 
         /**
+         * Sends a {@code "Connect"} request to the last
+         * {@link ChannelDownstreamHandler} in the {@link ChannelPipeline} of
+         * the specified {@link Channel}.
+         *
+         * @param channel  the channel to bind
+         * @param remoteAddress  the remote address to connect to
+         *
+         * @return the {@link ChannelFuture} which will be notified when the
+         *         bind operation is done
+         */
+        public static IChannelFuture Connect(IChannel channel, EndPoint remoteAddress)
+        {
+            if (remoteAddress == null)
+            {
+                throw new NullReferenceException("remoteAddress");
+            }
+            IChannelFuture future = Future(channel);
+            channel.GetPipeline().SendDownstream(new DownstreamChannelStateEvent(
+                    channel, future, ChannelState.CONNECTED, remoteAddress));
+            return future;
+        }
+
+        /**
+         * Sends a {@code "Connect"} request to the
+         * {@link ChannelDownstreamHandler} which is placed in the closest
+         * downstream from the handler associated with the specified
+         * {@link ChannelHandlerContext}.
+         *
+         * @param ctx     the context
+         * @param future  the future which will be notified when the bind
+         *                operation is done
+         * @param remoteAddress the remote address to connect to
+         */
+        public static void Connect(IChannelHandlerContext ctx, IChannelFuture future, SocketAddress remoteAddress)
+        {
+            if (remoteAddress == null)
+            {
+                throw new NullReferenceException("remoteAddress");
+            }
+            ctx.SendDownstream(new DownstreamChannelStateEvent(
+                    ctx.GetChannel(), future, ChannelState.CONNECTED, remoteAddress));
+        }
+
+        /**
          * Sends a {@code "unbind"} request to the
          * {@link ChannelDownstreamHandler} which is placed in the closest
          * downstream from the handler associated with the specified

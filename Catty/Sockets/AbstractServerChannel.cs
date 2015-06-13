@@ -15,16 +15,6 @@ namespace Catty.Core.Sockets
         {
         }
 
-        public override IChannelFuture Connect(EndPoint remoteAddress)
-        {
-            return GetUnsupportedOperationFuture();
-        }
-
-        public override IChannelFuture Disconnect()
-        {
-            return GetUnsupportedOperationFuture();
-        }
-
         public override int GetInterestOps()
         {
             return ChannelValues.OP_NONE;
@@ -38,16 +28,6 @@ namespace Catty.Core.Sockets
         protected override void SetInterestOpsNow(int interestOps)
         {
             // Ignore.
-        }
-
-        public override IChannelFuture Write(Object message)
-        {
-            return GetUnsupportedOperationFuture();
-        }
-
-        public override IChannelFuture Write(Object message, EndPoint remoteAddress)
-        {
-            return GetUnsupportedOperationFuture();
         }
 
         public override bool IsConnected()

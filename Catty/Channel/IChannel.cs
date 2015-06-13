@@ -110,44 +110,6 @@ namespace Catty.Core.Channel
         EndPoint GetRemoteAddress();
 
         /**
-         * Sends a message to this channel asynchronously.    If this channel was
-         * created by a connectionless transport (e.g. {@link DatagramChannel})
-         * and is not connected yet, you have to call {@link #write(Object, SocketAddress)}
-         * instead.  Otherwise, the write request will fail with
-         * {@link NotYetConnectedException} and an {@code 'exceptionCaught'} event
-         * will be triggered.
-         *
-         * @param message the message to write
-         *
-         * @return the {@link ChannelFuture} which will be notified when the
-         *         write request succeeds or fails
-         *
-         * @throws NullPointerException if the specified message is {@code null}
-         */
-        IChannelFuture Write(Object message);
-
-        /**
-         * Sends a message to this channel asynchronously.  It has an additional
-         * parameter that allows a user to specify where to send the specified
-         * message instead of this channel's current remote address.  If this
-         * channel was created by a connectionless transport (e.g. {@link DatagramChannel})
-         * and is not connected yet, you must specify non-null address.  Otherwise,
-         * the write request will fail with {@link NotYetConnectedException} and
-         * an {@code 'exceptionCaught'} event will be triggered.
-         *
-         * @param message       the message to write
-         * @param remoteAddress where to send the specified message.
-         *                      This method is identical to {@link #write(Object)}
-         *                      if {@code null} is specified here.
-         *
-         * @return the {@link ChannelFuture} which will be notified when the
-         *         write request succeeds or fails
-         *
-         * @throws NullPointerException if the specified message is {@code null}
-         */
-        IChannelFuture Write(Object message, EndPoint remoteAddress);
-
-        /**
          * Binds this channel to the specified local address asynchronously.
          *
          * @param localAddress where to bind
@@ -158,26 +120,6 @@ namespace Catty.Core.Channel
          * @throws NullPointerException if the specified address is {@code null}
          */
         IChannelFuture Bind(EndPoint localAddress);
-
-        /**
-         * Connects this channel to the specified remote address asynchronously.
-         *
-         * @param remoteAddress where to connect
-         *
-         * @return the {@link ChannelFuture} which will be notified when the
-         *         connection request succeeds or fails
-         *
-         * @throws NullPointerException if the specified address is {@code null}
-         */
-        IChannelFuture Connect(EndPoint remoteAddress);
-
-        /**
-         * Disconnects this channel from the current remote address asynchronously.
-         *
-         * @return the {@link ChannelFuture} which will be notified when the
-         *         disconnection request succeeds or fails
-         */
-        IChannelFuture Disconnect();
 
         /**
          * Unbinds this channel from the current local address asynchronously.

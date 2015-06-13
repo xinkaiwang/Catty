@@ -26,7 +26,6 @@ namespace ExampleServer
             {
                 Console.WriteLine(msg);
                 Channels.Write(ctx.GetChannel(), msg);
-                ctx.GetChannel().Write(msg);
             }
         }
     }

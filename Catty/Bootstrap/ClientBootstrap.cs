@@ -141,11 +141,11 @@ namespace Catty.Core.Bootstrap
             // Bind.
             if (localAddress != null)
             {
-                ch.Bind(localAddress);
+                Channels.Bind(ch, localAddress);
             }
 
             // Connect.
-            return ch.Connect(remoteAddress);
+            return Channels.Connect(ch, remoteAddress);
         }
 
         /**

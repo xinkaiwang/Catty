@@ -82,13 +82,6 @@ namespace Catty.Core.Sockets.Nio
             this.socket.Bind(localEndPoint);
         }
 
-        public override IChannelFuture Connect(EndPoint remoteAddress)
-        {
-            IChannelFuture cf = Channels.Future(this);
-            Connect(cf, remoteAddress);
-            return cf;
-        }
-        
         private bool isConnecting;
         private DateTime startConnectTime;
         private EndPoint remoteEndPoint;

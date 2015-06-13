@@ -224,14 +224,6 @@ namespace Catty.Core.Channel
 
         public abstract EndPoint GetRemoteAddress();
 
-        public abstract IChannelFuture Write(object message);
-
-        public abstract IChannelFuture Write(object message, EndPoint remoteAddress);
-
-        public abstract IChannelFuture Connect(EndPoint remoteAddress);
-
-        public abstract IChannelFuture Disconnect();
-
         public abstract int GetInterestOps();
 
         public bool IsReadable()
