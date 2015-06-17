@@ -48,12 +48,17 @@
     <Compile Include="Buffer\AbstractChannelBuffer.cs" />
     <Compile Include="Buffer\ByteArrayChannelBuffer.cs" />
     <Compile Include="Buffer\ByteArrayChannelBufferFactory.cs" />
+    <Compile Include="Buffer\ByteBufExt.cs" />
+    <Compile Include="Buffer\BytesPool.cs" />
     <Compile Include="Buffer\ChannelBufferExt.cs" />
     <Compile Include="Buffer\ChannelBuffers.cs" />
     <Compile Include="Buffer\ChannelHandler.cs" />
     <Compile Include="Buffer\CompositeChannelBuffer.cs" />
     <Compile Include="Buffer\DefaultPinedBufferFactory.cs" />
+    <Compile Include="Buffer\DynamicByteBuf.cs" />
+    <Compile Include="Buffer\RecycleObjectPool.cs" />
     <Compile Include="Buffer\DynamicChannelBuffer.cs" />
+    <Compile Include="Buffer\IByteBuf.cs" />
     <Compile Include="Buffer\IChannelBuffer.cs" />
     <Compile Include="Buffer\IChannelBufferFactory.cs" />
     <Compile Include="Buffer\IPinedBufferFactory.cs" />
