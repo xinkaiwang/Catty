@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catty.Buffer
+namespace Catty.Core.Buffer
 {
     public class RecycleObjectPool<T> where T : new()
     {

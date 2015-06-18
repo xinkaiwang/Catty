@@ -22,25 +22,16 @@ namespace Catty.Core.Handler.Codec
             }
 
             IMessageEvent e = (IMessageEvent)evt;
-            if (!DoEncode(ctx, e))
-            {
-                ctx.SendDownstream(e);
-            }
-        }
-
-        protected bool DoEncode(IChannelHandlerContext ctx, IMessageEvent e)
-        {
             Object originalMessage = e.GetMessage();
             Object encodedMessage = Encode(ctx, e.GetChannel(), originalMessage);
             if (originalMessage == encodedMessage)
             {
-                return false;
+                ctx.SendDownstream(e);
             }
             if (encodedMessage != null)
             {
                 Channels.Write(ctx, e.GetFuture(), encodedMessage, e.GetRemoteAddress());
             }
-            return true;
         }
 
         /**

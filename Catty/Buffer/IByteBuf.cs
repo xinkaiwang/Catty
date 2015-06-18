@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catty.Buffer
+namespace Catty.Core.Buffer
 {
     // return int means how many data has been visited, most of times return = length. When return < length means end of visiting.
     public delegate int DataVisitor(byte[] buf, int index, int length);
@@ -24,6 +24,12 @@ namespace Catty.Buffer
          * {@code (newCapacity - currentCapacity)}.
          */
         IByteBuf ChangeCapacity(int newCapacity);
+
+        /**
+         * Returns the number of readable bytes which is equal to
+         * {@code (this.writerIndex - this.readerIndex)}.
+         */
+        int ReadableBytes { get; }
 
         /**
          * Returns the {@code readerIndex} of this buffer.

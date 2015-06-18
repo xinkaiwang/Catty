@@ -16,7 +16,7 @@ namespace Catty.Core.Buffer
 
         private object lockObj = new object(); // always lock before modify the list
         private List<byte[]> list = new List<byte[]>();
-        private const int BUF_SIZE = 512;
+        private const int BUF_SIZE = 4096;
         private const int BATCH_ALLOC_COUNT = 64;
         private int allocCounter = 0;
 

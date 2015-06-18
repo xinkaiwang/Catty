@@ -4,10 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catty.Buffer
+namespace Catty.Core.Buffer
 {
     public class DynamicByteBuf : IByteBuf
     {
+        public static DynamicByteBuf GetInstance()
+        {
+            var obj = RecycleObjectPool<DynamicByteBuf>.GetObject();
+            obj.Retain();
+            return obj;
+        }
+
         public const int PAGESIZE = 4096;
         private int MacCapacity = int.MaxValue;
 
@@ -25,6 +32,7 @@ namespace Catty.Buffer
             return this;
         }
 
+        public int ReadableBytes { get { return WriterIndex - ReaderIndex; } }
         public int ReaderIndex { get; set; }
         public int WriterIndex { get; set; }
 
@@ -198,7 +206,8 @@ namespace Catty.Buffer
         public void Release()
         {
             refCount--;
-            if (refCount < 0) throw new IndexOutOfRangeException();
+            if (refCount < 0) 
+                throw new IndexOutOfRangeException();
             if (refCount == 0)
             {
                 this.Clear();
@@ -215,7 +224,7 @@ namespace Catty.Buffer
 
         public IByteBuf Compact()
         {
-            if (this.ReadableBytes() == 0)
+            if (this.ReadableBytes == 0)
             {
                 this.Clear();
             }

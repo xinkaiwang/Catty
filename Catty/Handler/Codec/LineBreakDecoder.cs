@@ -19,17 +19,13 @@ namespace Catty.Core.Handler.Codec
         {
 
             Object m = e.GetMessage();
-            if (!(m is IChannelBuffer))
+            if (!(m is IByteBuf))
             {
                 ctx.SendUpstream(e);
                 return;
             }
 
-            IChannelBuffer input = (IChannelBuffer)m;
-            if (!input.Readable())
-            {
-                return;
-            }
+            IByteBuf input = (IByteBuf)m;
 
             var bytes = input.GetByteArray();
             string str = DataTypeString.StringFromBytes(bytes);
@@ -40,18 +36,19 @@ namespace Catty.Core.Handler.Codec
             int index = str.IndexOf('\n');
             do
             {
-                if (index > 0)
+                if (index >= 0)
                 {
+                    int trimEnd = index;
                     if (str.ToCharArray()[index - 1] == '\r')
                     {
-                        index = index - 1;
+                        trimEnd -= 1;
                     }
-                    string item = str.Substring(0, index);
+                    string item = str.Substring(0, trimEnd);
                     str = str.Substring(index + 1);
                     Channels.FireMessageReceived(ctx, item);
                 }
                 index = str.IndexOf('\n');
-            } while (index > 0);
+            } while (index >= 0);
             cumulation = str;
         }
 
@@ -69,11 +66,12 @@ namespace Catty.Core.Handler.Codec
             {
                 if (originalMessage is String)
                 {
-                    IChannelBuffer buf = ChannelBuffers.DynamicBuffer(100);
+                    IByteBuf buf = DynamicByteBuf.GetInstance();
                     byte[] bytes = DataTypeString.BytesFromString((string)originalMessage);
                     buf.WriteBytes(bytes, 0, bytes.Length);
                     buf.WriteByte((byte)'\n');
                     Channels.Write(ctx.GetChannel(), buf);
+                    buf.Release();
                     return;
                 }
             }

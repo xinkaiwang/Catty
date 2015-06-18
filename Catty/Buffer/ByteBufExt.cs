@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Catty.Buffer
+namespace Catty.Core.Buffer
 {
     public static class ByteBufExt
     {
-        /**
-         * Returns the number of readable bytes which is equal to
-         * {@code (this.writerIndex - this.readerIndex)}.
-         */
-        public static int ReadableBytes(this IByteBuf buf)
+        public static byte[] GetByteArray(this IByteBuf buf)
         {
-            return buf.WriterIndex - buf.ReaderIndex;
+            byte[] array = new byte[buf.ReadableBytes];
+            buf.GetBytes(buf.ReaderIndex, array);
+            return array;
         }
 
         /**
@@ -33,7 +31,7 @@ namespace Catty.Buffer
          */
         public static bool IsReadable(this IByteBuf buf)
         {
-            return buf.ReadableBytes() > 0;
+            return buf.ReadableBytes > 0;
         }
 
         /**
@@ -41,7 +39,7 @@ namespace Catty.Buffer
          */
         public static bool IsReadable(this IByteBuf buf, int size)
         {
-            return buf.ReadableBytes() >= size;
+            return buf.ReadableBytes >= size;
         }
 
         /**
@@ -148,15 +146,15 @@ namespace Catty.Buffer
          */
         public static IByteBuf ReadBytes(this IByteBuf buf, byte[] dst)
         {
-            return ReadBytes(buf, buf.ReaderIndex, dst, 0, dst.Length);
+            return ReadBytes(buf, dst, 0, dst.Length);
         }
 
-        public static IByteBuf ReadBytes(this IByteBuf buf, int index, byte[] dst, int dstIndex, int length)
+        public static IByteBuf ReadBytes(this IByteBuf buf, byte[] dst, int dstIndex, int length)
         {
             if (length < 0) throw new IndexOutOfRangeException();
             if (dstIndex + length > dst.Length) throw new IndexOutOfRangeException();
-            if (index + length > buf.WriterIndex) throw new IndexOutOfRangeException();
-            buf.GetBytes(index, length, (b, start, len) =>
+            if (buf.ReaderIndex + length > buf.WriterIndex) throw new IndexOutOfRangeException();
+            buf.ReadBytes(length, (b, start, len) =>
             {
                 System.Buffer.BlockCopy(b, start, dst, dstIndex, len);
                 dstIndex += len;
@@ -197,7 +195,7 @@ namespace Catty.Buffer
          */
         public static int BytesBefore(this IByteBuf buf, byte value)
         {
-            return BytesBefore(buf, buf.ReadableBytes(), value);
+            return BytesBefore(buf, buf.ReadableBytes, value);
         }
 
         /**
@@ -216,7 +214,7 @@ namespace Catty.Buffer
          */
         public static int BytesBefore(this IByteBuf buf, int length, byte value)
         {
-            return BytesBefore(buf, buf.ReaderIndex, buf.ReadableBytes(), value);
+            return BytesBefore(buf, buf.ReaderIndex, buf.ReadableBytes, value);
         }
 
         /**

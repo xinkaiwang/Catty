@@ -15,14 +15,14 @@ namespace Catty.Core.Handler.Codec
         {
             if (msg != null && msg is string)
             {
-                IChannelBuffer buf = ChannelBuffers.DynamicBuffer(100);
+                IByteBuf buf = DynamicByteBuf.GetInstance();
                 byte[] bytes = DataTypeString.BytesFromString((string)msg);
                 buf.WriteBytes(bytes,0, bytes.Length);
                 return buf;
             }
             else
             {
-                return ChannelBuffers.EMPTY_BUFFER;
+                return null;
             }
         }
     }

@@ -37,22 +37,6 @@ namespace Catty.Core.Channel
         bool SetOption(String name, Object value);
 
         /**
-         * Returns the default {@link ChannelBufferFactory} used to create a new
-         * {@link ChannelBuffer}.  The default is {@link HeapChannelBufferFactory}.
-         * You can specify a different factory to change the default
-         * {@link ByteOrder} for example.
-         */
-        IChannelBufferFactory GetBufferFactory();
-
-        /**
-         * Sets the default {@link ChannelBufferFactory} used to create a new
-         * {@link ChannelBuffer}.  The default is {@link HeapChannelBufferFactory}.
-         * You can specify a different factory to change the default
-         * {@link ByteOrder} for example.
-         */
-        void SetBufferFactory(IChannelBufferFactory bufferFactory);
-
-        /**
          * Returns the {@link ChannelPipelineFactory} which will be used when
          * a child channel is created.  If the {@link Channel} does not create
          * a child channel, this property is not used at all, and therefore will
