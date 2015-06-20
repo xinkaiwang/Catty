@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Catty</id>
+    <version>0.1.0</version>
+    <title>Catty.Core</title>
+    <authors>Xinkai Wang</authors>
+    <owners>Xinkai Wang</owners>
+    <licenseUrl>https://raw.githubusercontent.com/xinkaiwang/Catty/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/xinkaiwang/Catty</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Catty project - an event-driven asynchronous network application framework for C#.</description>
+    <releaseNotes>An event-driven asynchronous network application framework for C#. Heavily inspired from Netty (java).</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>ansync network performance</tags>
+  </metadata>
+</package>
