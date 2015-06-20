@@ -71,7 +71,6 @@ namespace Catty.Core.Handler.Codec
                     buf.WriteBytes(bytes, 0, bytes.Length);
                     buf.WriteByte((byte)'\n');
                     Channels.Write(ctx.GetChannel(), buf);
-                    buf.Release();
                     return;
                 }
             }

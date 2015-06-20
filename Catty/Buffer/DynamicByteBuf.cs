@@ -11,7 +11,6 @@ namespace Catty.Core.Buffer
         public static DynamicByteBuf GetInstance()
         {
             var obj = RecycleObjectPool<DynamicByteBuf>.GetObject();
-            obj.Retain();
             return obj;
         }
 
@@ -211,6 +210,7 @@ namespace Catty.Core.Buffer
             if (refCount == 0)
             {
                 this.Clear();
+                this.refCount++;
                 RecycleObjectPool<DynamicByteBuf>.ReleaseObject(this);
             }
         }

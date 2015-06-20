@@ -97,6 +97,7 @@
     <Compile Include="Channel\UpstreamMessageEvent.cs" />
     <Compile Include="Channel\WriteCompletionEvent.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Handler\Codec\FastLineBreakDecoder.cs" />
     <Compile Include="Handler\Codec\LineBreakDecoder.cs" />
     <Compile Include="Handler\Codec\OneToOneEncoder.cs" />
     <Compile Include="Handler\Codec\StringEncoder.cs" />

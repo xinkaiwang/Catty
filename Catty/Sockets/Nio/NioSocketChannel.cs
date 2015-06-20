@@ -216,6 +216,7 @@ namespace Catty.Core.Sockets.Nio
                     }
                     if (data.ReadableBytes == 0) // no more data available
                     {
+                        data.Release();
                         postSendingQueue.Add(dequeue);
                         preSendingQueue.RemoveAt(0);
                     }

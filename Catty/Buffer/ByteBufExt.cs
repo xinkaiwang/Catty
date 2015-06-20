@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -144,23 +145,25 @@ namespace Catty.Core.Buffer
          * @throws IndexOutOfBoundsException
          *         if {@code dst.length} is greater than {@code this.readableBytes}
          */
-        public static IByteBuf ReadBytes(this IByteBuf buf, byte[] dst)
+        public static int ReadBytes(this IByteBuf buf, byte[] dst)
         {
             return ReadBytes(buf, dst, 0, dst.Length);
         }
 
-        public static IByteBuf ReadBytes(this IByteBuf buf, byte[] dst, int dstIndex, int length)
+        public static int ReadBytes(this IByteBuf buf, byte[] dst, int dstIndex, int length)
         {
             if (length < 0) throw new IndexOutOfRangeException();
             if (dstIndex + length > dst.Length) throw new IndexOutOfRangeException();
-            if (buf.ReaderIndex + length > buf.WriterIndex) throw new IndexOutOfRangeException();
+            length = Math.Min(length, buf.ReadableBytes);
+            int count = 0;
             buf.ReadBytes(length, (b, start, len) =>
             {
                 System.Buffer.BlockCopy(b, start, dst, dstIndex, len);
                 dstIndex += len;
+                count += len;
                 return len;
             });
-            return buf;
+            return count;
         }
 
         public static IByteBuf WriteBytes(this IByteBuf buf, byte[] src)
@@ -177,6 +180,19 @@ namespace Catty.Core.Buffer
             {
                 System.Buffer.BlockCopy(src, srcIndex, b, start, len);
                 srcIndex += len;
+                return len;
+            });
+            return buf;
+        }
+
+        public static IByteBuf WriteBytes(this IByteBuf buf, IByteBuf src, int length)
+        {
+            if (length < 0) throw new IndexOutOfRangeException();
+            if (length > src.ReadableBytes) throw new IndexOutOfRangeException();
+            if (buf.WriterIndex + length > buf.Capacity) throw new IndexOutOfRangeException();
+            src.ReadBytes(length, (b, start, len) =>
+            {
+                buf.WriteBytes(b, start, len);
                 return len;
             });
             return buf;
@@ -242,9 +258,9 @@ namespace Catty.Core.Buffer
                 int i = Array.IndexOf(b, value, start, len);
                 if (i >= 0)
                 {
-                    count += i;
+                    count += (i - start);
                     found = true;
-                    return i;
+                    return (i - start);
                 }
                 else
                 {
@@ -253,6 +269,135 @@ namespace Catty.Core.Buffer
                 }
             });
             return found ? count : -1;
+        }
+    }
+
+    public class ByteBufReadStream : Stream
+    {
+        private IByteBuf buf;
+        public ByteBufReadStream SetUnderlyingData(IByteBuf buf)
+        {
+            this.buf = buf;
+            return this;
+        }
+
+        public override bool CanRead
+        {
+            get { return true; }
+        }
+
+        public override bool CanSeek
+        {
+            get { return false; }
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
+        public override void Flush()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long Length
+        {
+            get { return buf.ReadableBytes; }
+        }
+
+        public override long Position { get; set; }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int read = buf.ReadBytes(buffer, offset, count);
+            return read;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class ByteBufWriteStream : Stream
+    {
+        private IByteBuf buf;
+
+        public void SetUnderlyingBuffer(IByteBuf buf)
+        {
+            this.buf = buf;
+        }
+        public IByteBuf GetUnderlyingBuffer()
+        {
+            var oldBuffer = this.buf;
+            this.buf = null;
+            return oldBuffer;
+        }
+
+        public override bool CanRead
+        {
+            get { return false; }
+        }
+
+        public override bool CanSeek
+        {
+            get { return false; }
+        }
+
+        public override bool CanWrite
+        {
+            get { return true; }
+        }
+
+        public override void Flush()
+        {
+        }
+
+        public override long Length
+        {
+            get { return buf.ReadableBytes; }
+        }
+
+        public override long Position
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            this.buf.WriteBytes(buffer, offset, count);
         }
     }
 }
