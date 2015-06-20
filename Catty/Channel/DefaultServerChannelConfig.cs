@@ -10,7 +10,6 @@ namespace Catty.Core.Channel
     public class DefaultServerChannelConfig : IChannelConfig
     {
         private volatile IChannelPipelineFactory pipelineFactory;
-        private volatile IChannelBufferFactory bufferFactory = ByteArrayChannelBufferFactory.GetInstance();
 
         public virtual void SetOptions(Dictionary<String, Object> options)
         {
@@ -36,7 +35,7 @@ namespace Catty.Core.Channel
             }
             else if ("bufferFactory".Equals(key))
             {
-                SetBufferFactory((IChannelBufferFactory)value);
+                //SetBufferFactory((IChannelBufferFactory)value);
             }
             else
             {
@@ -57,21 +56,6 @@ namespace Catty.Core.Channel
                 throw new NullReferenceException("pipelineFactory");
             }
             this.pipelineFactory = pipelineFactory;
-        }
-
-        public IChannelBufferFactory GetBufferFactory()
-        {
-            return bufferFactory;
-        }
-
-        public void SetBufferFactory(IChannelBufferFactory bufferFactory)
-        {
-            if (bufferFactory == null)
-            {
-                throw new NullReferenceException("bufferFactory");
-            }
-
-            this.bufferFactory = bufferFactory;
         }
 
         public int GetConnectTimeoutMillis()

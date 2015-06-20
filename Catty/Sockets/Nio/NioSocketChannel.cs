@@ -205,9 +205,9 @@ namespace Catty.Core.Sockets.Nio
                     dequeue.GetFuture().SetFailure(new NullReferenceException("no data or not serilized?"));
                     preSendingQueue.RemoveAt(0);
                 }
-                else if (msg is IChannelBuffer)
+                else if (msg is IByteBuf)
                 {
-                    IChannelBuffer data = (IChannelBuffer)msg;
+                    IByteBuf data = (IByteBuf)msg;
                     int length = Math.Min(data.ReadableBytes, outputBuf.Length - outputDataEndIndex);
                     if (length > 0)
                     {
@@ -216,6 +216,7 @@ namespace Catty.Core.Sockets.Nio
                     }
                     if (data.ReadableBytes == 0) // no more data available
                     {
+                        data.Release();
                         postSendingQueue.Add(dequeue);
                         preSendingQueue.RemoveAt(0);
                     }
@@ -267,10 +268,11 @@ namespace Catty.Core.Sockets.Nio
                 bytesRead = socket.EndReceive(result);
                 if (bytesRead > 0)
                 {
-                    var buffer = ChannelBuffers.Buffer(bytesRead);
+                    var buffer = DynamicByteBuf.GetInstance();
                     buffer.WriteBytes(incommingBuf, 0, bytesRead);
                     // note: This is in I/O callback thread. which means the first callback in handler chain is going to be I/O thread.
                     Channels.FireMessageReceived(this, buffer);
+                    buffer.Release();
                     if (state > ST_OPEN)
                     {
                         socket.BeginReceive(incommingBuf, 0, incommingBuf.Length, SocketFlags.None, this.ReceiveCallback, null);
