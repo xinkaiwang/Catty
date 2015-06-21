@@ -8,7 +8,7 @@ and streamlines network programming such as TCP socket server.
 
 ##Example 1: Discard Service (RFC863)
 
-```
+```C#
     public class MyHandler : SimpleChannelUpstreamHandler
     {
         public override void MessageReceived(IChannelHandlerContext ctx, IMessageEvent e)
@@ -30,8 +30,8 @@ and streamlines network programming such as TCP socket server.
 ```
 
 ## Example 2: IByteBuf Echo Service
-```
-    public class EchoHandler : SimpleChannelUpstreamHandler
+```C#
+    public class MyHandler : SimpleChannelUpstreamHandler
     {
         public override void MessageReceived(IChannelHandlerContext ctx, IMessageEvent e)
         {
@@ -43,12 +43,12 @@ and streamlines network programming such as TCP socket server.
 
 ## Example 3: LineBreanDecoder + String.ToUpper() Echo Service
 ###Step 1: Hook up a LineBreanDecoder in the chain to do the line-break + decode work
-```
+```C#
             Func<IChannelHandler[]> handlersFactory = () => new IChannelHandler[] {new LineBreakDecoder(), new MyHandler()};
 ```
 ###Step 2: now the message we see in MyHandler becomes String instead of IByteBuf
-```
-    public class EchoHandler : SimpleChannelUpstreamHandler
+```C#
+    public class MyHandler : SimpleChannelUpstreamHandler
     {
         public override void MessageReceived(IChannelHandlerContext ctx, IMessageEvent e)
         {
