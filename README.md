@@ -3,10 +3,11 @@ C# asynchronous event-driven network application framework inspired by Netty
 
 Catty is a Ansync I/O server/client  framework which enables quick and easy development 
 of network applications such as protocol servers and clients. It greatly simplifies 
-and streamlines network programming such as TCP socket server.
+and streamlines network programming such as TCP socket server. 
 
+###Tutorial: https://youtu.be/LwKN_p4Qvc8
 
-##Example 1: Discard Service (RFC863)
+####Example 1: Discard Service (RFC863)
 
 ```C#
 public class MyHandler : SimpleChannelUpstreamHandler
@@ -29,7 +30,7 @@ public class Program
 }
 ```
 
-## Example 2: IByteBuf Echo Service
+#### Example 2: IByteBuf Echo Service
 ```C#
 public class MyHandler : SimpleChannelUpstreamHandler
 {
@@ -41,12 +42,12 @@ public class MyHandler : SimpleChannelUpstreamHandler
 }
 ```
 
-## Example 3: LineBreanDecoder + String.ToUpper() Echo Service
-###Step 1: Hook up a LineBreanDecoder in the chain to do the line-break + decode work
+#### Example 3: LineBreanDecoder + String.ToUpper() Echo Service
+#####Step 1: Hook up a LineBreanDecoder in the chain to do the line-break + decode work
 ```C#
 Func<IChannelHandler[]> handlersFactory = () => new IChannelHandler[] {new LineBreakDecoder(), new MyHandler()};
 ```
-###Step 2: now the message we see in MyHandler becomes String instead of IByteBuf
+##### Step 2: now the message we see in MyHandler becomes String instead of IByteBuf
 ```C#
 public class MyHandler : SimpleChannelUpstreamHandler
 {
